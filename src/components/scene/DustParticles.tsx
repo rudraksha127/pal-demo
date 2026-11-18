@@ -81,14 +81,12 @@ export function DustParticles({ count = 1000, area = 50, height = 25, density = 
       </bufferGeometry>
       <pointsMaterial
         size={0.2}
-        vertexColors
+        color="#8a8579"
         transparent
         opacity={0.5}
         depthWrite={false}
         sizeAttenuation
-      >
-        <color attach="color" args={['#8a8579']} />
-      </pointsMaterial>
+      />
     </points>
   )
 }

@@ -17,7 +17,7 @@ page.on('console', (message) => {
 })
 page.on('pageerror', (error) => errors.push(`PAGEERROR ${error.message}`))
 
-await page.goto('http://127.0.0.1:5173', { waitUntil: 'networkidle' })
+await page.goto('http://localhost:5173', { waitUntil: 'networkidle' })
 await page.waitForTimeout(5000)
 await page.screenshot({ path: `${OUT}/dashboard.png` })
 

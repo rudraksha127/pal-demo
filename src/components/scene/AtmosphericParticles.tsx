@@ -95,14 +95,12 @@ export function AtmosphericParticles({
       </bufferGeometry>
       <pointsMaterial
         size={0.15}
-        vertexColors
+        color={color}
         transparent
         opacity={0.6}
         depthWrite={false}
         sizeAttenuation
-      >
-        <color attach="color" args={[color]} />
-      </pointsMaterial>
+      />
     </points>
   )
 }

@@ -1,0 +1,395 @@
+/* ============================================================
+   SHADCN / RADIX UI COMPONENT STYLES (HALLMARK MILITARY HUD THEME)
+   ============================================================ */
+
+/* ── Tooltips ── */
+.shadcn-tooltip {
+  z-index: 9999;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: rgba(11, 29, 21, 0.95);
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 12px rgba(45, 240, 138, 0.15);
+  backdrop-filter: blur(12px);
+  animation: shadcnTooltipFadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  pointer-events: none;
+}
+
+.shadcn-tooltip-arrow {
+  fill: rgba(11, 29, 21, 0.95);
+}
+
+@keyframes shadcnTooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ── Dialog Modals ── */
+.shadcn-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(2, 6, 4, 0.82);
+  backdrop-filter: blur(8px);
+  animation: shadcnFadeIn 0.2s ease-out;
+}
+
+.shadcn-dialog-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+  width: min(92vw, 680px);
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 16px;
+  background: linear-gradient(175deg, #0f241a 0%, #081610 100%);
+  border: 1px solid var(--color-border-strong);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.75), 0 0 40px rgba(45, 240, 138, 0.12);
+  padding: 24px 28px;
+  color: var(--color-text);
+  outline: none;
+  animation: shadcnModalSlideIn 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes shadcnFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes shadcnModalSlideIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -46%) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.shadcn-dialog-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid rgba(86, 235, 163, 0.15);
+  background: rgba(14, 38, 27, 0.6);
+  color: var(--color-text-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.shadcn-dialog-close:hover {
+  background: rgba(45, 240, 138, 0.15);
+  color: var(--color-text);
+  border-color: var(--color-emerald-bright);
+}
+
+.shadcn-dialog-header {
+  margin-bottom: 20px;
+}
+
+.shadcn-dialog-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.shadcn-dialog-description {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--color-text-dim);
+  line-height: 1.45;
+}
+
+.shadcn-dialog-footer {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(86, 235, 163, 0.12);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* ── Dropdown Menus ── */
+.shadcn-dropdown-content {
+  z-index: 2000;
+  min-width: 190px;
+  padding: 6px;
+  border-radius: 12px;
+  background: rgba(11, 29, 21, 0.96);
+  border: 1px solid var(--color-border-strong);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 20px rgba(45, 240, 138, 0.1);
+  backdrop-filter: blur(16px);
+  animation: shadcnFadeIn 0.15s ease-out;
+}
+
+.shadcn-dropdown-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  transition: all 0.15s ease;
+}
+
+.shadcn-dropdown-item:hover,
+.shadcn-dropdown-item[data-highlighted] {
+  background: rgba(45, 240, 138, 0.12);
+  color: var(--color-text);
+}
+
+.shadcn-dropdown-item[data-state='checked'] {
+  color: var(--color-emerald-bright);
+}
+
+.shadcn-dropdown-indicator {
+  position: absolute;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  color: var(--color-emerald-bright);
+}
+
+.shadcn-dropdown-label {
+  padding: 6px 12px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+}
+
+.shadcn-dropdown-separator {
+  height: 1px;
+  margin: 4px -6px;
+  background: rgba(86, 235, 163, 0.12);
+}
+
+/* ── Tabs ── */
+.shadcn-tabs-list {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+  border-radius: 10px;
+  background: rgba(8, 20, 13, 0.65);
+  border: 1px solid var(--color-border);
+}
+
+.shadcn-tabs-trigger {
+  padding: 6px 14px;
+  border-radius: 7px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-dim);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.shadcn-tabs-trigger:hover {
+  color: var(--color-text);
+}
+
+.shadcn-tabs-trigger[data-state='active'] {
+  background: rgba(45, 240, 138, 0.16);
+  color: var(--color-emerald-bright);
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px rgba(45, 240, 138, 0.4);
+}
+
+/* ── Switches ── */
+.shadcn-switch {
+  width: 36px;
+  height: 20px;
+  border-radius: 9999px;
+  background: rgba(30, 50, 40, 0.8);
+  border: 1px solid rgba(86, 235, 163, 0.2);
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  padding: 2px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.shadcn-switch[data-state='checked'] {
+  background: #174d32;
+  border-color: var(--color-emerald-bright);
+  box-shadow: 0 0 10px rgba(45, 240, 138, 0.3);
+}
+
+.shadcn-switch-thumb {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: #a9cfbd;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease;
+  transform: translateX(0);
+}
+
+.shadcn-switch[data-state='checked'] .shadcn-switch-thumb {
+  transform: translateX(16px);
+  background: var(--color-emerald-bright);
+  box-shadow: 0 0 8px #2df08a;
+}
+
+/* ── Sliders ── */
+.shadcn-slider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  touch-action: none;
+  width: 100%;
+  height: 20px;
+}
+
+.shadcn-slider-track {
+  background: rgba(14, 38, 27, 0.9);
+  border: 1px solid rgba(86, 235, 163, 0.2);
+  position: relative;
+  flex-grow: 1;
+  border-radius: 9999px;
+  height: 6px;
+}
+
+.shadcn-slider-range {
+  position: absolute;
+  background: linear-gradient(90deg, #10b981, #2df08a);
+  border-radius: 9999px;
+  height: 100%;
+}
+
+.shadcn-slider-thumb {
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: #f0fff7;
+  border: 2px solid var(--color-emerald-bright);
+  box-shadow: 0 0 10px rgba(45, 240, 138, 0.5);
+  border-radius: 9999px;
+  outline: none;
+  cursor: grab;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.shadcn-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 14px rgba(45, 240, 138, 0.8);
+}
+
+.shadcn-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.25);
+}
+
+/* ── Viewport Floor Select Button (Dropdown Trigger) ── */
+.floor-select-btn {
+  display: inline-flex;
+  height: 38px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  border: 1px solid rgba(80, 180, 130, 0.22);
+  border-radius: 9px;
+  color: #c8e8d7;
+  background: rgba(4, 12, 8, 0.82);
+  backdrop-filter: blur(14px);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.floor-select-btn:hover {
+  background: rgba(14, 38, 27, 0.9);
+  border-color: var(--color-emerald-bright);
+  color: #ffffff;
+}
+
+/* ── Quick Victim HUD Alert Chip ── */
+.victim-hud-chip {
+  position: absolute;
+  top: 14px;
+  left: 68px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(22, 10, 10, 0.88);
+  border: 1px solid rgba(255, 95, 86, 0.5);
+  box-shadow: 0 0 20px rgba(255, 95, 86, 0.25);
+  backdrop-filter: blur(12px);
+  color: #ff9d96;
+  font-size: 11px;
+  cursor: pointer;
+  animation: victimChipPulse 2s infinite ease-in-out;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.victim-hud-chip:hover {
+  transform: translateY(-1px) scale(1.02);
+  border-color: #ff5f56;
+  box-shadow: 0 0 28px rgba(255, 95, 86, 0.45);
+}
+
+.victim-hud-chip strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.victim-hud-chip__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff5f56;
+  box-shadow: 0 0 8px #ff5f56;
+}
+
+@keyframes victimChipPulse {
+  0%, 100% {
+    box-shadow: 0 0 16px rgba(255, 95, 86, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 26px rgba(255, 95, 86, 0.45);
+  }
+}
+

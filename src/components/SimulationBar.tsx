@@ -3,6 +3,7 @@ import { STAGES } from '../data/scenarios'
 import { useSimulation } from '../state/SimulationContext'
 import { formatClock, missionClock } from '../simulation/engine'
 import { Waveform } from './ui/Charts'
+import { tacticalAudio } from '../utils/audio'
 
 const SPEEDS = [1, 2, 4, 8]
 
@@ -27,11 +28,17 @@ export function SimulationBar() {
   })
 
   const handlePrimary = () => {
+    tacticalAudio.playClick()
     if (complete) {
       runFullSimulation()
       return
     }
     togglePause()
+  }
+
+  const handleSpeedChange = (spd: number) => {
+    tacticalAudio.playClick()
+    setSpeed(spd)
   }
 
   return (
@@ -64,7 +71,7 @@ export function SimulationBar() {
 
       <label className="speed-control">
         <span className="sr-only">Simulation speed</span>
-        <select value={state.speed} onChange={(event) => setSpeed(Number(event.target.value))} aria-label="Simulation speed">
+        <select value={state.speed} onChange={(event) => handleSpeedChange(Number(event.target.value))} aria-label="Simulation speed">
           {SPEEDS.map((speed) => (
             <option key={speed} value={speed}>
               {speed}×

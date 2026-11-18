@@ -2,14 +2,23 @@ import { Suspense, useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { AdaptiveDpr, OrbitControls } from '@react-three/drei'
+import { EffectComposer, Bloom, Vignette, ToneMapping } from '@react-three/postprocessing'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 import type { FloorFilter, Scenario, SceneTool } from '../../types'
 import { RuinBuilding, RubbleField, SceneGround } from './Ruin'
 import { FloorSlab, SearchZones, SiteBounds, VictimMarker } from './Zones'
 import { SensorMesh } from './Sensors'
+import { DustParticles } from './DustParticles'
+import { AtmosphericParticles } from './AtmosphericParticles'
 
-const DEFAULT_POSITION = new THREE.Vector3(13.8, 9.6, 16.6)
-const DEFAULT_TARGET = new THREE.Vector3(0.8, 5.0, 0.5)
+export type CameraPreset = 'hero' | 'drone' | 'victim' | 'ortho'
+
+const PRESET_CONFIGS: Record<CameraPreset, { pos: THREE.Vector3; target: THREE.Vector3 }> = {
+  hero: { pos: new THREE.Vector3(13.8, 9.6, 16.6), target: new THREE.Vector3(0.8, 5.0, 0.5) },
+  drone: { pos: new THREE.Vector3(18.5, 17.5, 21.0), target: new THREE.Vector3(0.8, 3.5, 0.5) },
+  victim: { pos: new THREE.Vector3(5.8, 4.6, 6.8), target: new THREE.Vector3(2.2, 3.6, 1.4) },
+  ortho: { pos: new THREE.Vector3(0.8, 28.0, 0.6), target: new THREE.Vector3(0.8, 0.1, 0.5) },
+}
 
 function SkyDome() {
   const material = useMemo(
@@ -60,10 +69,10 @@ function Lights() {
   return (
     <>
       <hemisphereLight args={['#cdd8d4', '#31372f', 0.92]} />
-      <ambientLight intensity={0.19} />
+      <ambientLight intensity={0.22} />
       <directionalLight
         position={[19, 27, 14]}
-        intensity={1.72}
+        intensity={1.85}
         color="#f0eee2"
         castShadow
         shadow-mapSize-width={2048}
@@ -83,38 +92,61 @@ function Lights() {
   )
 }
 
-function CameraRig({ tool, resetSignal }: { tool: SceneTool; resetSignal: number }) {
+function CameraRig({
+  tool,
+  resetSignal,
+  preset = 'hero',
+}: {
+  tool: SceneTool
+  resetSignal: number
+  preset?: CameraPreset
+}) {
   const { camera } = useThree()
   const controlsRef = useRef<OrbitControlsImpl | null>(null)
-  const previousReset = useRef(resetSignal)
+  const previousSignal = useRef(resetSignal)
+  const previousPreset = useRef(preset)
+
   const animation = useRef<{
     active: boolean
     elapsed: number
     fromPosition: THREE.Vector3
     fromTarget: THREE.Vector3
+    toPosition: THREE.Vector3
+    toTarget: THREE.Vector3
   }>({
     active: false,
     elapsed: 0,
     fromPosition: new THREE.Vector3(),
     fromTarget: new THREE.Vector3(),
+    toPosition: PRESET_CONFIGS.hero.pos,
+    toTarget: PRESET_CONFIGS.hero.target,
   })
 
   useEffect(() => {
-    if (resetSignal === previousReset.current) return
-    previousReset.current = resetSignal
-    animation.current.active = true
-    animation.current.elapsed = 0
-    animation.current.fromPosition.copy(camera.position)
-    animation.current.fromTarget.copy(controlsRef.current?.target ?? DEFAULT_TARGET)
-  }, [camera, resetSignal])
+    const isReset = resetSignal !== previousSignal.current
+    const isPresetChange = preset !== previousPreset.current
+
+    if (isReset || isPresetChange) {
+      previousSignal.current = resetSignal
+      previousPreset.current = preset
+
+      const config = PRESET_CONFIGS[preset] || PRESET_CONFIGS.hero
+      animation.current.active = true
+      animation.current.elapsed = 0
+      animation.current.fromPosition.copy(camera.position)
+      animation.current.fromTarget.copy(controlsRef.current?.target ?? config.target)
+      animation.current.toPosition = config.pos
+      animation.current.toTarget = config.target
+    }
+  }, [camera, resetSignal, preset])
 
   useFrame((_, delta) => {
     if (!animation.current.active || !controlsRef.current) return
-    animation.current.elapsed = Math.min(1, animation.current.elapsed + delta / 0.75)
+    animation.current.elapsed = Math.min(1, animation.current.elapsed + delta / 0.8)
     const t = animation.current.elapsed
     const eased = t * t * (3 - 2 * t)
-    camera.position.lerpVectors(animation.current.fromPosition, DEFAULT_POSITION, eased)
-    controlsRef.current.target.lerpVectors(animation.current.fromTarget, DEFAULT_TARGET, eased)
+    camera.position.lerpVectors(animation.current.fromPosition, animation.current.toPosition, eased)
+    controlsRef.current.target.lerpVectors(animation.current.fromTarget, animation.current.toTarget, eased)
     controlsRef.current.update()
     if (t >= 1) animation.current.active = false
   })
@@ -125,9 +157,9 @@ function CameraRig({ tool, resetSignal }: { tool: SceneTool; resetSignal: number
       target={[0.8, 5.0, 0.5]}
       enableDamping
       dampingFactor={0.07}
-      minDistance={6}
-      maxDistance={62}
-      maxPolarAngle={Math.PI / 2.04}
+      minDistance={4}
+      maxDistance={75}
+      maxPolarAngle={Math.PI / 2.02}
       enablePan
       panSpeed={0.8}
       rotateSpeed={0.62}
@@ -149,7 +181,7 @@ function CameraRig({ tool, resetSignal }: { tool: SceneTool; resetSignal: number
   )
 }
 
-interface CollapseSceneProps {
+export interface CollapseSceneProps {
   scenario: Scenario
   floor: FloorFilter
   tool: SceneTool
@@ -158,9 +190,13 @@ interface CollapseSceneProps {
   selectedSensor: string | null
   onSelectZone: (id: string) => void
   onSelectSensor: (id: string) => void
+  onSelectVictim?: () => void
   victimVisible: boolean
   sensorsActive: boolean
   resetSignal: number
+  cameraPreset?: CameraPreset
+  bloomEnabled?: boolean
+  particlesEnabled?: boolean
   onReady?: () => void
 }
 
@@ -173,22 +209,36 @@ function SceneContents({
   selectedSensor,
   onSelectZone,
   onSelectSensor,
+  onSelectVictim,
   victimVisible,
   sensorsActive,
   resetSignal,
+  cameraPreset = 'hero',
+  bloomEnabled = true,
+  particlesEnabled = true,
 }: CollapseSceneProps) {
   const victimOnFloor = floor === 'all' || scenario.victim.floor === floor
+
   return (
     <>
       <color attach="background" args={['#8d9c99']} />
       <fog attach="fog" args={['#8f9e9b', 30, 125]} />
       <SkyDome />
       <Lights />
+
       <Suspense fallback={null}>
         <SceneGround seed={scenario.seed} />
         <RuinBuilding seed={scenario.seed} />
         <RubbleField seed={scenario.seed} />
         <FloorSlab floor={floor} />
+
+        {particlesEnabled && (
+          <>
+            <DustParticles count={700} area={35} height={18} density={0.8} />
+            <AtmosphericParticles count={400} area={30} height={15} color="#cdd5c8" speed={0.8} />
+          </>
+        )}
+
         <SearchZones
           zones={scenario.zones}
           selectedZone={selectedZone}
@@ -196,18 +246,40 @@ function SceneContents({
           floor={floor}
           overlays={overlays}
         />
+
         <SensorMesh
           sensors={scenario.sensors}
           active={sensorsActive}
           selectedSensor={selectedSensor}
           onSelectSensor={onSelectSensor}
           showLabels={overlays && floor === 'all'}
+          victimPos={scenario.victim.position}
         />
-        <VictimMarker scenario={scenario} visible={victimVisible && victimOnFloor} />
+
+        <VictimMarker
+          scenario={scenario}
+          visible={victimVisible && victimOnFloor}
+          onSelectVictim={onSelectVictim}
+        />
+
         <SiteBounds visible={overlays && tool === 'bounds'} />
       </Suspense>
-      <CameraRig tool={tool} resetSignal={resetSignal} />
+
+      <CameraRig tool={tool} resetSignal={resetSignal} preset={cameraPreset} />
       <AdaptiveDpr pixelated />
+
+      {bloomEnabled && (
+        <EffectComposer>
+          <Bloom
+            intensity={0.45}
+            mipmapBlur
+            luminanceThreshold={0.82}
+            luminanceSmoothing={0.05}
+          />
+          <Vignette darkness={0.25} offset={0.35} />
+          <ToneMapping mode={THREE.ACESFilmicToneMapping} />
+        </EffectComposer>
+      )}
     </>
   )
 }
@@ -219,10 +291,10 @@ export function CollapseScene(props: CollapseSceneProps) {
       shadows
       dpr={[1, 1.75]}
       camera={{ position: [13.8, 9.6, 16.6], fov: 42, near: 0.1, far: 400 }}
-      gl={{ antialias: true, powerPreference: 'high-performance' }}
+      gl={{ antialias: true, powerPreference: 'high-performance', alpha: true }}
       onCreated={({ gl }) => {
         gl.toneMapping = THREE.ACESFilmicToneMapping
-        gl.toneMappingExposure = 0.92
+        gl.toneMappingExposure = 0.95
         gl.shadowMap.type = THREE.PCFSoftShadowMap
         props.onReady?.()
       }}

@@ -17,17 +17,21 @@ import {
   Settings,
   ShieldCheck,
   Sparkles,
+  Volume2,
+  VolumeX,
   X,
   Zap,
 } from 'lucide-react'
 import { useSimulation } from '../state/SimulationContext'
 import type { NavTab, Tone } from '../types'
+import { tacticalAudio } from '../utils/audio'
 
 const NAV_ITEMS: Array<{ id: NavTab; label: string; icon: typeof House }> = [
   { id: 'simulation', label: 'Simulation', icon: House },
   { id: 'analysis', label: 'Analysis', icon: ChartLine },
   { id: 'report', label: 'Report', icon: ClipboardList },
   { id: 'scenarios', label: 'Scenarios', icon: Compass },
+  { id: 'rffense', label: 'RF FENSE Ops', icon: Radio },
 ]
 
 const ROLES = [
@@ -89,6 +93,7 @@ export function TopBar() {
   const [menu, setMenu] = useState<'notifications' | 'settings' | 'about' | 'commander' | null>(null)
   const [role, setRole] = useState(ROLES[0])
   const [reduceMotion, setReduceMotion] = useState(false)
+  const [isMuted, setIsMuted] = useState(() => tacticalAudio.isMuted())
   const rootRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -148,6 +153,19 @@ export function TopBar() {
         </nav>
 
         <div className="topbar-actions">
+          <button
+            className="icon-button"
+            aria-label={isMuted ? 'Unmute tactical audio' : 'Mute tactical audio'}
+            onClick={() => {
+              const next = tacticalAudio.toggleMute()
+              setIsMuted(next)
+              addToast(next ? 'Tactical Audio Muted' : 'Tactical Audio Active', next ? 'Audio synthesizer silenced.' : 'Radar telemetry audio unmuted.', 'info')
+            }}
+            title={isMuted ? 'Unmute audio (M)' : 'Mute audio (M)'}
+          >
+            {isMuted ? <VolumeX size={18} strokeWidth={1.8} color="var(--color-amber-bright)" /> : <Volume2 size={18} strokeWidth={1.8} color="var(--color-emerald-bright)" />}
+          </button>
+
           <div className="popover-anchor">
             <button
               className="icon-button"

@@ -1,4 +1,4 @@
-export type NavTab = 'simulation' | 'analysis' | 'report' | 'scenarios'
+export type NavTab = 'simulation' | 'analysis' | 'report' | 'scenarios' | 'rffense'
 
 export type RunStatus = 'running' | 'paused' | 'complete'
 export type RunMode = 'ambient' | 'autonomous'

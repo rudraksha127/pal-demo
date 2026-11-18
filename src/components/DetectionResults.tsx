@@ -1,6 +1,9 @@
+import { useState } from 'react'
 import { Activity, AudioLines, CheckCircle2, CircleDashed, Radar } from 'lucide-react'
 import { useSimulation } from '../state/SimulationContext'
 import type { SensorKind } from '../types'
+import { VictimTriageDialog } from './modals/VictimTriageDialog'
+import { tacticalAudio } from '../utils/audio'
 
 const CHANNELS: Array<{
   key: SensorKind
@@ -41,9 +44,16 @@ function VictimGlyph() {
 
 export function DetectionResults() {
   const { state, scenario } = useSimulation()
+  const [dialogOpen, setDialogOpen] = useState(false)
+
   const contact = state.evidence >= 60
   const evidence = Math.floor(state.evidence)
   const acquiredCount = CHANNELS.filter((channel) => state.channels[channel.key]).length
+
+  const handleCardClick = () => {
+    tacticalAudio.playHeartbeat()
+    setDialogOpen(true)
+  }
 
   return (
     <section className="detection-panel panel" aria-label="Detection results">
@@ -54,7 +64,14 @@ export function DetectionResults() {
         <h2>Detection Results</h2>
       </div>
 
-      <div className={`victim-card ${contact ? '' : 'victim-card--idle'}`}>
+      <div
+        className={`victim-card ${contact ? '' : 'victim-card--idle'}`}
+        onClick={handleCardClick}
+        role="button"
+        tabIndex={0}
+        title="Click to view detailed medical triage dossier"
+        style={{ cursor: 'pointer' }}
+      >
         <span className="victim-avatar">
           <VictimGlyph />
         </span>
@@ -100,6 +117,8 @@ export function DetectionResults() {
           ? 'Evidence package locked and handed off to the rescue team.'
           : `Acquiring contact. ${acquiredCount} of 3 sensor arrays reporting.`}
       </p>
+
+      <VictimTriageDialog open={dialogOpen} onOpenChange={setDialogOpen} />
     </section>
   )
 }

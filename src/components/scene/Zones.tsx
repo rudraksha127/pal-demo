@@ -167,7 +167,13 @@ function useHaloTexture() {
   }, [])
 }
 
-function VictimBody({ victim }: { victim: Scenario['victim'] }) {
+function VictimBody({
+  victim,
+  onSelectVictim,
+}: {
+  victim: Scenario['victim']
+  onSelectVictim?: () => void
+}) {
   const halo = useHaloTexture()
   const spriteRef = useRef<THREE.Sprite>(null)
   const lightRef = useRef<THREE.PointLight>(null)
@@ -187,7 +193,7 @@ function VictimBody({ victim }: { victim: Scenario['victim'] }) {
       new THREE.MeshBasicMaterial({
         color: '#ff5a48',
         transparent: true,
-        opacity: 0.16,
+        opacity: 0.22,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         toneMapped: false,
@@ -210,15 +216,29 @@ function VictimBody({ victim }: { victim: Scenario['victim'] }) {
       spriteMaterial.opacity = 0.44 + Math.sin(time * 2.4) * 0.08
     }
     if (lightRef.current) {
-      lightRef.current.intensity = 1.2 + Math.sin(time * 2.4) * 0.35
+      lightRef.current.intensity = 1.4 + Math.sin(time * 2.4) * 0.4
     }
     if (groupRef.current) {
-      groupRef.current.position.y = victim.position[1] + Math.sin(time * 1.4) * 0.012
+      groupRef.current.position.y = victim.position[1] + Math.sin(time * 1.4) * 0.015
     }
   })
 
   return (
-    <group ref={groupRef} position={victim.position}>
+    <group
+      ref={groupRef}
+      position={victim.position}
+      onClick={(e) => {
+        e.stopPropagation()
+        onSelectVictim?.()
+      }}
+      onPointerOver={(e) => {
+        e.stopPropagation()
+        document.body.style.cursor = 'pointer'
+      }}
+      onPointerOut={() => {
+        document.body.style.cursor = 'default'
+      }}
+    >
       <sprite ref={spriteRef} position={[0, 0.95, 0]} scale={[2.2, 2.2, 1]}>
         <spriteMaterial map={halo} transparent opacity={0.5} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
       </sprite>
@@ -257,6 +277,15 @@ function VictimBody({ victim }: { victim: Scenario['victim'] }) {
         <ringGeometry args={[0.32, 0.4, 32]} />
         <meshBasicMaterial color="#ff4a42" transparent opacity={0.72} side={THREE.DoubleSide} toneMapped={false} />
       </mesh>
+
+      <SceneLabelSprite
+        title="VICTIM T-01"
+        color="#ff5f56"
+        position={[0, 2.2, 0]}
+        width={1.4}
+        height={0.55}
+        onClick={onSelectVictim}
+      />
     </group>
   )
 }
@@ -264,12 +293,14 @@ function VictimBody({ victim }: { victim: Scenario['victim'] }) {
 export function VictimMarker({
   scenario,
   visible,
+  onSelectVictim,
 }: {
   scenario: Scenario
   visible: boolean
+  onSelectVictim?: () => void
 }) {
   if (!visible) return null
-  return <VictimBody victim={scenario.victim} />
+  return <VictimBody victim={scenario.victim} onSelectVictim={onSelectVictim} />
 }
 
 export function SiteBounds({ visible }: { visible: boolean }) {

@@ -107,7 +107,7 @@ interface SimulationContextValue {
 
 const SimulationContext = createContext<SimulationContextValue | null>(null)
 
-const VALID_TABS: NavTab[] = ['simulation', 'analysis', 'report', 'scenarios']
+const VALID_TABS: NavTab[] = ['simulation', 'analysis', 'report', 'scenarios', 'rffense']
 
 function tabFromHash(): NavTab {
   const value = window.location.hash.replace('#', '') as NavTab
