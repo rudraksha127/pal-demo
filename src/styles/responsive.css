@@ -1,0 +1,695 @@
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 1560px) {
+  .dashboard-grid {
+    grid-template-columns: 272px minmax(0, 1fr) 334px;
+  }
+
+  .topbar {
+    grid-template-columns: 286px minmax(0, 1fr) auto;
+  }
+
+  .nav-item {
+    padding: 0 18px;
+  }
+
+  .mission-strip {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+
+  .mission-title-row h1 {
+    font-size: 22px;
+  }
+
+  .mission-title-row,
+  .mission-meta {
+    padding-right: 136px;
+  }
+
+  .mode-card {
+    padding: 0 14px;
+  }
+}
+
+@media (max-width: 1360px) {
+  .dashboard-grid {
+    grid-template-columns: 258px minmax(0, 1fr) 320px;
+  }
+
+  .topbar {
+    grid-template-columns: 250px minmax(0, 1fr) auto;
+    gap: 12px;
+  }
+
+  .brand-name {
+    font-size: 21px;
+  }
+
+  .nav-item {
+    padding: 0 15px;
+    font-size: 13px;
+  }
+
+  .mission-title-row h1 {
+    font-size: 21px;
+  }
+
+  .mission-meta {
+    gap: 6px 12px;
+  }
+
+  .sensor-spark {
+    width: 68px;
+  }
+
+  .sim-copy {
+    min-width: 160px;
+  }
+
+  .sim-copy strong {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 1279px) {
+  .dashboard-grid {
+    grid-template-columns: 254px minmax(0, 1fr);
+  }
+
+  .right-column {
+    grid-column: 2;
+  }
+
+  .right-column .mode-card {
+    display: none;
+  }
+
+  .right-rail {
+    display: grid;
+    grid-column: 2;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+    margin-top: 0;
+  }
+
+  .detection-panel,
+  .location-panel,
+  .status-panel {
+    flex: none;
+  }
+
+  .location-body {
+    flex-direction: column;
+  }
+
+  .location-plot {
+    width: 100%;
+    min-height: 108px;
+  }
+
+  .coord-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px 10px;
+  }
+
+  .workflow {
+    grid-row: 1;
+  }
+
+  .analysis-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .analysis-stack {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .analysis-stack .chart-panel:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1100px) {
+  .topbar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .brand-copy {
+    display: none;
+  }
+
+  .brand-mark {
+    width: 44px;
+  }
+
+  .nav-item {
+    padding: 0 12px;
+    font-size: 12.5px;
+  }
+
+  .commander-copy {
+    display: none;
+  }
+
+  .commander {
+    padding: 4px 6px;
+  }
+
+  .mission-strip {
+    grid-template-columns: minmax(0, 1fr) 274px;
+  }
+
+  .mode-card {
+    gap: 9px;
+  }
+
+  .mode-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .mode-title {
+    font-size: 10.5px;
+  }
+
+  .mode-sub {
+    font-size: 9.5px;
+  }
+
+  .sensor-cards {
+    gap: 9px;
+  }
+
+  .sensor-card {
+    padding: 0 10px;
+  }
+
+  .sensor-spark {
+    display: none;
+  }
+
+  .right-rail {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .status-panel {
+    grid-column: 1 / -1;
+  }
+
+  .report-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .app-main {
+    padding: 12px;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .workflow {
+    position: static;
+    grid-row: auto;
+    height: auto;
+    min-height: 0;
+    margin-top: 0;
+    padding: 14px;
+  }
+
+  .workflow-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+    overflow: visible;
+  }
+
+  .workflow-actions {
+    margin-top: 10px;
+  }
+
+  .run-button {
+    min-height: 56px;
+  }
+
+  .right-column {
+    grid-column: 1;
+  }
+
+  .right-rail {
+    display: grid;
+    grid-column: 1;
+    grid-template-columns: 1fr;
+    margin-top: 0;
+  }
+
+  .status-panel {
+    grid-column: auto;
+  }
+
+  .location-body {
+    flex-direction: row;
+  }
+
+  .location-plot {
+    width: 52%;
+    min-height: 130px;
+  }
+
+  .coord-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mission-strip {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mission-card {
+    height: auto;
+    min-height: 92px;
+    padding: 14px 16px;
+  }
+
+  .mission-title-row,
+  .mission-meta {
+    padding-right: 130px;
+  }
+
+  .viewport-panel {
+    height: clamp(380px, 56vh, 520px);
+    min-height: 380px;
+  }
+
+  .sensor-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .sensor-spark {
+    display: block;
+    width: 64px;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .analysis-stack {
+    display: flex;
+  }
+
+  .scenario-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .view-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .view-actions {
+    padding-bottom: 0;
+  }
+
+  .report-head {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .report-meta {
+    text-align: left;
+  }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --topbar-h: 66px;
+  }
+
+  .topbar {
+    height: var(--topbar-h);
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .brand-mark {
+    width: 38px;
+    height: 38px;
+  }
+
+  .brand-mark svg {
+    width: 38px;
+    height: 38px;
+  }
+
+  .main-nav {
+    padding: 3px;
+  }
+
+  .nav-item {
+    height: 38px;
+    gap: 6px;
+    padding: 0 10px;
+    font-size: 11.5px;
+  }
+
+  .nav-item svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .topbar-actions {
+    gap: 5px;
+  }
+
+  .icon-button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .icon-button--info {
+    display: none;
+  }
+
+  .commander {
+    height: 38px;
+  }
+
+  .avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 9px;
+  }
+
+  .mission-title-row,
+  .mission-meta {
+    padding-right: 0;
+  }
+
+  .mission-title-row {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .mission-title-row h1 {
+    font-size: 20px;
+    white-space: normal;
+  }
+
+  .mission-meta {
+    gap: 6px 11px;
+    font-size: 10px;
+  }
+
+  .weather {
+    display: none;
+  }
+
+  .mode-card {
+    height: 62px;
+    padding: 0 12px;
+  }
+
+  .mode-led {
+    display: none;
+  }
+
+  .viewport-panel {
+    height: 370px;
+    min-height: 370px;
+  }
+
+  .viewport-toolbar {
+    top: 10px;
+    left: 10px;
+  }
+
+  .viewport-controls {
+    top: 10px;
+    right: 10px;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
+
+  .segmented button {
+    height: 28px;
+    padding: 0 10px;
+    font-size: 10.5px;
+  }
+
+  .floor-select {
+    height: 34px;
+  }
+
+  .viewport-hud {
+    bottom: 10px;
+    left: 12px;
+  }
+
+  .viewport-scale {
+    display: none;
+  }
+
+  .zone-chip {
+    bottom: 34px;
+    left: 12px;
+  }
+
+  .sim-bar {
+    height: auto;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .sim-copy {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .sim-wave {
+    display: none;
+  }
+
+  .sim-clock {
+    order: 4;
+  }
+
+  .speed-control {
+    order: 5;
+  }
+
+  .sensor-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .sensor-spark {
+    width: 110px;
+  }
+
+  .workflow-list {
+    grid-template-columns: 1fr;
+  }
+
+  .right-rail {
+    gap: 10px;
+  }
+
+  .location-body {
+    flex-direction: column;
+  }
+
+  .location-plot {
+    width: 100%;
+    min-height: 110px;
+  }
+
+  .coord-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px 12px;
+  }
+
+  .kpi-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .report-doc {
+    padding: 16px;
+  }
+
+  .report-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .report-title-row {
+    flex-wrap: wrap;
+  }
+
+  .report-title-row h2 {
+    font-size: 19px;
+  }
+
+  .modal {
+    padding: 16px;
+  }
+
+  .about-facts {
+    grid-template-columns: 1fr;
+  }
+
+  .toasts {
+    right: 12px;
+    bottom: 12px;
+    width: calc(100vw - 24px);
+  }
+
+  .popover {
+    position: fixed;
+    top: 72px;
+    right: 12px;
+    left: 12px;
+    width: auto;
+  }
+
+  .commander-menu {
+    width: auto;
+  }
+
+  .table-panel {
+    overflow-x: auto;
+  }
+
+  .data-table {
+    min-width: 560px;
+  }
+
+  .page-view {
+    padding-bottom: 20px;
+  }
+}
+
+@media (max-width: 560px) {
+  .nav-item span {
+    display: none;
+  }
+
+  .nav-item {
+    width: 40px;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .nav-item.is-active {
+    width: 44px;
+  }
+
+  .brand-mark {
+    width: 34px;
+  }
+
+  .topbar-actions .icon-button:first-child {
+    display: grid;
+  }
+
+  .icon-button--settings {
+    display: none;
+  }
+
+  .mission-meta span:nth-child(2) {
+    display: none;
+  }
+
+  .sim-clock {
+    padding: 0 9px;
+    font-size: 14px;
+  }
+
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .report-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .floor-plan__legend {
+    display: none;
+  }
+
+  .scenario-card {
+    min-height: 240px;
+  }
+
+  .view-head h1 {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 400px) {
+  .app-main {
+    padding: 9px;
+  }
+
+  .topbar {
+    padding: 0 8px;
+  }
+
+  .main-nav {
+    gap: 0;
+  }
+
+  .commander {
+    display: none;
+  }
+
+  .mission-title-row h1 {
+    font-size: 18px;
+  }
+
+  .op-pill {
+    font-size: 8.5px;
+  }
+
+  .sim-copy span {
+    display: none;
+  }
+}
+
+/* ============================================================
+   Reduced motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
