@@ -1,20 +1,28 @@
+import { useState } from 'react'
 import {
+  Building2,
   Clock3,
   FileText,
   Info,
+  Keyboard,
   LayoutDashboard,
   LoaderCircle,
   RotateCcw,
   ScanLine,
+  Settings,
   ShieldCheck,
+  Volume2,
+  VolumeX,
 } from 'lucide-react'
 import { useRfFense } from '../RfFenseContext'
 import { formatMissionClock } from '../engine'
+import { tacticalAudio } from '../../utils/audio'
 import type { RfTab } from '../types'
 
 const TABS: Array<{ id: RfTab; label: string; icon: typeof ScanLine }> = [
   { id: 'operation', label: 'Operation', icon: ScanLine },
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { id: 'building_lab', label: '3D Building Lab', icon: Building2 },
   { id: 'report', label: 'Report', icon: FileText },
   { id: 'about', label: 'About', icon: Info },
 ]
@@ -40,8 +48,19 @@ function BrandMark() {
   )
 }
 
-export function TopBar() {
+interface TopBarProps {
+  onOpenSettings?: () => void
+  onOpenShortcuts?: () => void
+}
+
+export function TopBar({ onOpenSettings, onOpenShortcuts }: TopBarProps) {
   const { tab, setTab, scene, busy, elapsed, restartSimulation } = useRfFense()
+  const [muted, setMuted] = useState(() => tacticalAudio.isMuted())
+
+  const handleToggleMute = () => {
+    const isNowMuted = tacticalAudio.toggleMute()
+    setMuted(isNowMuted)
+  }
 
   return (
     <header className="rf-topbar">
@@ -76,6 +95,45 @@ export function TopBar() {
       </nav>
 
       <div className="rf-topbar__meta">
+        <button
+          type="button"
+          className="rf-restart"
+          onClick={handleToggleMute}
+          title={muted ? 'Unmute tactical audio' : 'Mute tactical audio'}
+          aria-label={muted ? 'Unmute tactical audio' : 'Mute tactical audio'}
+          style={{ padding: '6px 9px', display: 'inline-flex', alignItems: 'center' }}
+        >
+          {muted ? <VolumeX size={14} aria-hidden="true" /> : <Volume2 size={14} aria-hidden="true" />}
+        </button>
+
+        {onOpenSettings && (
+          <button
+            type="button"
+            className="rf-restart"
+            onClick={onOpenSettings}
+            title="Configure simulation preferences"
+            aria-label="Settings"
+            data-control="open-settings"
+            style={{ padding: '6px 9px', display: 'inline-flex', alignItems: 'center' }}
+          >
+            <Settings size={14} aria-hidden="true" />
+          </button>
+        )}
+
+        {onOpenShortcuts && (
+          <button
+            type="button"
+            className="rf-restart"
+            onClick={onOpenShortcuts}
+            title="Keyboard shortcuts (?)"
+            aria-label="Shortcuts"
+            data-control="open-shortcuts"
+            style={{ padding: '6px 9px', display: 'inline-flex', alignItems: 'center' }}
+          >
+            <Keyboard size={14} aria-hidden="true" />
+          </button>
+        )}
+
         <span className="rf-scene-chip">
           <ShieldCheck size={13} aria-hidden="true" />
           Scene {String(scene).padStart(2, '0')} / 12

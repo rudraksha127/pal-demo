@@ -202,6 +202,58 @@ class TacticalAudioEngine {
     })
   }
 
+  // Low frequency seismic earthquake rumble
+  public playEarthquakeRumble() {
+    if (this.muted) return
+    this.initContext()
+    if (!this.ctx) return
+    const ctx = this.ctx
+    const now = ctx.currentTime
+
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.type = 'sawtooth'
+    osc.frequency.setValueAtTime(45, now)
+    osc.frequency.linearRampToValueAtTime(28, now + 1.4)
+
+    gain.gain.setValueAtTime(this.volume * 0.35, now)
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.6)
+
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+
+    osc.start(now)
+    osc.stop(now + 1.6)
+  }
+
+  // Sensor node disconnect / communication failure alarm warning
+  public playAlarmWarning() {
+    if (this.muted) return
+    this.initContext()
+    if (!this.ctx) return
+    const ctx = this.ctx
+    const now = ctx.currentTime
+
+    for (let i = 0; i < 2; i++) {
+      const start = now + i * 0.2
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+
+      osc.type = 'sawtooth'
+      osc.frequency.setValueAtTime(880, start)
+      osc.frequency.setValueAtTime(659, start + 0.09)
+
+      gain.gain.setValueAtTime(this.volume * 0.25, start)
+      gain.gain.exponentialRampToValueAtTime(0.001, start + 0.17)
+
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+
+      osc.start(start)
+      osc.stop(start + 0.17)
+    }
+  }
+
   // Rescue confirmed triumphal telemetry chord
   public playRescueConfirmed() {
     if (this.muted) return

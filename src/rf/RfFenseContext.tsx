@@ -9,6 +9,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import { tacticalAudio } from '../utils/audio'
 import type {
   RfAction,
   RfReport,
@@ -176,6 +177,7 @@ export function RfFenseProvider({ children }: { children: ReactNode }) {
 
   const triggerEarthquake = useCallback(() => {
     if (lockRef.current) return
+    tacticalAudio.playEarthquakeRumble()
     lockRef.current = 'earthquake'
     setBusy({ key: 'earthquake', label: 'Running earthquake and collapse sequence' })
     dispatch({ type: 'EARTHQUAKE', now: now() })
@@ -264,6 +266,7 @@ export function RfFenseProvider({ children }: { children: ReactNode }) {
 
   const startScan = useCallback(() => {
     if (lockRef.current) return
+    tacticalAudio.playRadarPing()
     dispatch({ type: 'SCAN_START', now: now() })
     pushToast('Initial scan started', 'Pre-programmed illustrative observations are being collected node by node.', 'info')
   }, [now, pushToast])
@@ -271,12 +274,14 @@ export function RfFenseProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (scene !== 7 || state.scanning.completedAt !== null) return
     const timer = window.setTimeout(() => {
+      tacticalAudio.playRadarPing()
       dispatch({ type: 'SCAN_STEP', now: now() })
     }, 1150)
     return () => window.clearTimeout(timer)
   }, [scene, state.scanning.activeNodeId, state.scanning.completedAt, state.scanning.startedAt, now])
 
   const simulateSensorFailure = useCallback(() => {
+    tacticalAudio.playAlarmWarning()
     runAsync(
       'failure',
       'Injecting node communication failure',
@@ -341,6 +346,7 @@ export function RfFenseProvider({ children }: { children: ReactNode }) {
         pushToast('Name required', 'Record the person who independently confirmed the candidate.', 'warning')
         return
       }
+      tacticalAudio.playStageChime()
       dispatch({ type: 'VERIFY_SURVIVOR', zoneId: verifyZone, method, confirmedBy: name, now: now() })
       pushToast(
         `Human verification recorded · Zone ${verifyZone}`,
@@ -353,6 +359,7 @@ export function RfFenseProvider({ children }: { children: ReactNode }) {
   )
 
   const completeExtraction = useCallback(() => {
+    tacticalAudio.playRescueConfirmed()
     runAsync(
       'extraction',
       'Recording extraction and medical handover',
@@ -368,12 +375,14 @@ export function RfFenseProvider({ children }: { children: ReactNode }) {
 
   const generateReport = useCallback(() => {
     if (state.extraction === null) return
+    tacticalAudio.playStageChime()
     dispatch({ type: 'REPORT_GENERATED', now: now() })
     setTabState('report')
     pushToast('Final search report ready', 'All figures are derived from the simulation ledger. Unresolved zones remain visible.', 'info')
   }, [now, pushToast, state.extraction])
 
   const restartSimulation = useCallback(() => {
+    tacticalAudio.playClick()
     generationRef.current += 1
     timersRef.current.forEach((timer) => window.clearTimeout(timer))
     timersRef.current.clear()

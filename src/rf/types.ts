@@ -1,5 +1,5 @@
 export type RfSceneId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
-export type RfTab = 'operation' | 'dashboard' | 'report' | 'about'
+export type RfTab = 'operation' | 'dashboard' | 'building_lab' | 'report' | 'about'
 
 export type ZoneId = 'A' | 'B' | 'C'
 export type ZoneStatus =
