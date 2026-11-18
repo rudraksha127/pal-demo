@@ -49,19 +49,19 @@ export function RfApp() {
       />
       <DisclaimerBanner />
 
-      <div className="rf-shell">
-        <WorkflowRail />
-        <main id="rf-main" className="rf-main">
-          <MissionBanner />
+      <div className={`rf-shell${tab === 'building_lab' ? ' no-rail' : ''}`}>
+        {tab !== 'building_lab' && <WorkflowRail />}
+        <main id="rf-main" className={`rf-main${tab === 'building_lab' ? ' rf-main--full' : ''}`}>
+          {tab !== 'building_lab' && <MissionBanner />}
           <p className="rf-sr-only" role="status" aria-live="polite">
             Scene {scene} of 12: {meta.label}. {meta.objective}
           </p>
           {tab === 'operation' && <OperationView />}
           {tab === 'dashboard' && <DashboardView />}
           {tab === 'building_lab' && (
-            <div style={{ padding: '8px 12px' }}>
+            <div style={{ width: '100%' }}>
               <SimulationProvider>
-                <SimulationDashboard />
+                <SimulationDashboard showSidebar={false} />
               </SimulationProvider>
             </div>
           )}

@@ -7,11 +7,15 @@ import { DetectionResults } from './DetectionResults'
 import { EstimatedLocation } from './EstimatedLocation'
 import { MissionStatus } from './MissionStatus'
 
-export function SimulationDashboard() {
+interface SimulationDashboardProps {
+  showSidebar?: boolean
+}
+
+export function SimulationDashboard({ showSidebar = false }: SimulationDashboardProps) {
   return (
-    <main id="main-content" className="app-main">
-      <div className="dashboard-grid">
-        <WorkflowSidebar />
+    <main id="main-content" className="app-main" style={{ padding: '0 4px 18px' }}>
+      <div className={`dashboard-grid${showSidebar ? '' : ' no-sidebar'}`}>
+        {showSidebar && <WorkflowSidebar />}
 
         <div className="center-column">
           <MissionHeader />

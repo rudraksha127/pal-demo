@@ -77,6 +77,9 @@ interface RfFenseContextValue {
   completeExtraction: () => void
   generateReport: () => void
   restartSimulation: () => void
+  isAutoRunning: boolean
+  runAutonomousSimulation: () => void
+  stopAutonomousSimulation: () => void
   now: () => number
 }
 
@@ -100,6 +103,10 @@ export function RfFenseProvider({ children }: { children: ReactNode }) {
   const generationRef = useRef(0)
   const toastIdRef = useRef(0)
 
+  const [isAutoRunning, setIsAutoRunning] = useState(false)
+  const autoRunningRef = useRef(false)
+  const autoRunTimersRef = useRef<number[]>([])
+
   const scene = deriveScene(state)
   const phase = derivePhase(state)
   const report = useMemo(() => getReport(state), [state])
@@ -116,6 +123,9 @@ export function RfFenseProvider({ children }: { children: ReactNode }) {
       generationRef.current += 1
       timersRef.current.forEach((timer) => window.clearTimeout(timer))
       timersRef.current.clear()
+      autoRunningRef.current = false
+      autoRunTimersRef.current.forEach((timer) => window.clearTimeout(timer))
+      autoRunTimersRef.current = []
     }
   }, [])
 
@@ -383,6 +393,10 @@ export function RfFenseProvider({ children }: { children: ReactNode }) {
 
   const restartSimulation = useCallback(() => {
     tacticalAudio.playClick()
+    autoRunningRef.current = false
+    setIsAutoRunning(false)
+    autoRunTimersRef.current.forEach((t) => window.clearTimeout(t))
+    autoRunTimersRef.current = []
     generationRef.current += 1
     timersRef.current.forEach((timer) => window.clearTimeout(timer))
     timersRef.current.clear()
@@ -397,6 +411,113 @@ export function RfFenseProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'RESTART', now: now() })
     pushToast('Simulation restarted', 'Scene 1 · Normal Building. All previous events and readings have been cleared.', 'info')
   }, [now, pushToast])
+
+  const stopAutonomousSimulation = useCallback(() => {
+    autoRunningRef.current = false
+    setIsAutoRunning(false)
+    autoRunTimersRef.current.forEach((t) => window.clearTimeout(t))
+    autoRunTimersRef.current = []
+    pushToast('Autonomous run stopped', 'Manual control restored. You can continue from the current scene.', 'info')
+  }, [pushToast])
+
+  const runAutonomousSimulation = useCallback(() => {
+    if (lockRef.current) return
+    autoRunTimersRef.current.forEach((t) => window.clearTimeout(t))
+    autoRunTimersRef.current = []
+
+    autoRunningRef.current = true
+    setIsAutoRunning(true)
+    pushToast('Autonomous Mode Activated', 'Running end-to-end disaster-to-rescue simulation across all 12 scenes...', 'success')
+
+    const scheduleStep = (fn: () => void, delay: number) => {
+      const t = window.setTimeout(() => {
+        if (!autoRunningRef.current) return
+        fn()
+      }, delay)
+      autoRunTimersRef.current.push(t)
+    }
+
+    // Step 1: Earthquake
+    triggerEarthquake()
+
+    // Step 2: Safety Assessment (~4800ms)
+    scheduleStep(() => {
+      runSafetyAssessment()
+    }, 4800)
+
+    // Step 3: Mark Safe Areas (~7200ms)
+    scheduleStep(() => {
+      markSafeAreas()
+    }, 7200)
+
+    // Step 4: Confirm Search Zones (~8700ms)
+    scheduleStep(() => {
+      confirmZones()
+    }, 8700)
+
+    // Step 5: Deploy Sensor Nodes (~10000ms)
+    scheduleStep(() => {
+      deploySensors()
+    }, 10000)
+
+    // Step 6: Connect Central Gateway (~12100ms)
+    scheduleStep(() => {
+      connectGateway()
+    }, 12100)
+
+    // Step 7: Start Initial Scan (~14300ms)
+    scheduleStep(() => {
+      startScan()
+    }, 14300)
+
+    // Step 8: Simulate Sensor Failure (~19500ms)
+    scheduleStep(() => {
+      simulateSensorFailure()
+    }, 19500)
+
+    // Step 9: Reassess Coverage Options (~21200ms)
+    scheduleStep(() => {
+      reassessCoverage()
+    }, 21200)
+
+    // Step 10: Rescan Zone A (~23100ms)
+    scheduleStep(() => {
+      rescanZone('A')
+    }, 23100)
+
+    // Step 11: Human Verification with explicit commander signature (~25200ms)
+    scheduleStep(() => {
+      confirmVerification('Visual and Acoustic Search Team', 'Captain M. Okafor (Rescue Commander)')
+    }, 25200)
+
+    // Step 12: Complete Extraction & Medical Handover (~27200ms)
+    scheduleStep(() => {
+      completeExtraction()
+    }, 27200)
+
+    // Step 13: Generate Final Search Report (~29500ms)
+    scheduleStep(() => {
+      generateReport()
+      autoRunningRef.current = false
+      setIsAutoRunning(false)
+      pushToast('Autonomous Simulation Complete', 'All 12 disaster-to-rescue scenes successfully executed. Final report generated.', 'success')
+    }, 29500)
+  }, [
+    triggerEarthquake,
+    runSafetyAssessment,
+    markSafeAreas,
+    confirmZones,
+    deploySensors,
+    connectGateway,
+    startScan,
+    simulateSensorFailure,
+    reassessCoverage,
+    rescanZone,
+    confirmVerification,
+    completeExtraction,
+    generateReport,
+    pushToast,
+  ])
 
   const selectZone = useCallback((zoneId: ZoneId | null) => {
     setSelectedZone(zoneId)
@@ -446,6 +567,9 @@ export function RfFenseProvider({ children }: { children: ReactNode }) {
       completeExtraction,
       generateReport,
       restartSimulation,
+      isAutoRunning,
+      runAutonomousSimulation,
+      stopAutonomousSimulation,
       now,
     }),
     [
@@ -483,6 +607,9 @@ export function RfFenseProvider({ children }: { children: ReactNode }) {
       completeExtraction,
       generateReport,
       restartSimulation,
+      isAutoRunning,
+      runAutonomousSimulation,
+      stopAutonomousSimulation,
       now,
     ],
   )

@@ -17,6 +17,7 @@ import {
   Siren,
   Stethoscope,
   Wrench,
+  Zap,
 } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useRfFense } from '../RfFenseContext'
@@ -126,6 +127,9 @@ export function ActionPanel() {
     generateReport,
     setTab,
     restartSimulation,
+    isAutoRunning,
+    runAutonomousSimulation,
+    stopAutonomousSimulation,
   } = useRfFense()
 
   const busyReason = busy ? `${busy.label}. Please wait for this step to finish.` : undefined
@@ -158,10 +162,43 @@ export function ActionPanel() {
         </span>
       </div>
 
-      {busy && (
+      {busy && !isAutoRunning && (
         <div className="rf-actions__busy" role="status" aria-live="polite">
           <LoaderCircle size={14} className="rf-spin" aria-hidden="true" />
           <span>{busy.label}</span>
+        </div>
+      )}
+
+      {isAutoRunning && (
+        <div
+          style={{
+            padding: '10px 14px',
+            marginBottom: '14px',
+            borderRadius: '8px',
+            background: 'rgba(16, 185, 129, 0.14)',
+            border: '1px solid rgba(52, 211, 153, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '10px',
+          }}
+          role="status"
+          aria-live="polite"
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <LoaderCircle size={15} className="rf-spin" style={{ color: '#34d399', flexShrink: 0 }} />
+            <span style={{ fontSize: '12px', fontWeight: 600, color: '#ecfdf5' }}>
+              Autonomous Simulation in progress · Scene {scene} / 12
+            </span>
+          </div>
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={stopAutonomousSimulation}
+            style={{ padding: '4px 9px', fontSize: '11px', fontWeight: 600, whiteSpace: 'nowrap' }}
+          >
+            Stop Auto-Run
+          </button>
         </div>
       )}
 
@@ -176,10 +213,39 @@ export function ActionPanel() {
             label="Trigger Earthquake"
             icon={<Siren size={15} />}
             onClick={triggerEarthquake}
-            disabled={Boolean(busy)}
+            disabled={Boolean(busy) || isAutoRunning}
             reason={busyReason}
             primary
           />
+          <div style={{ marginTop: '10px', marginBottom: '14px' }}>
+            <button
+              type="button"
+              className="primary-button"
+              data-control="run-autonomous-simulation"
+              onClick={runAutonomousSimulation}
+              disabled={Boolean(busy) || isAutoRunning}
+              title="One-click automated walkthrough of all 12 disaster-to-rescue scenes from earthquake to final report"
+              style={{
+                width: '100%',
+                padding: '11px 16px',
+                fontSize: '13px',
+                fontWeight: 600,
+                background: 'linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%)',
+                color: '#022c17',
+                border: '1px solid rgba(52, 211, 153, 0.6)',
+                borderRadius: '8px',
+                boxShadow: '0 0 20px rgba(16, 185, 129, 0.45)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+              }}
+            >
+              <Zap size={15} fill="#022c17" />
+              <span>Run Full Simulation (Autonomous Mode)</span>
+            </button>
+          </div>
           <StepList
             steps={[
               { label: 'Normal building', detail: 'Five occupied floors, no incident.', done: true },

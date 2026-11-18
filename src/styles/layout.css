@@ -14,6 +14,10 @@
   align-items: start;
 }
 
+.dashboard-grid.no-sidebar {
+  grid-template-columns: minmax(0, 1fr) 352px;
+}
+
 .center-column {
   display: flex;
   min-width: 0;

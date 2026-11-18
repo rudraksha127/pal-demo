@@ -295,11 +295,19 @@
   padding: 14px 18px 20px;
 }
 
+.rf-shell.no-rail {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .rf-main {
   display: flex;
   min-width: 0;
   flex-direction: column;
   gap: 12px;
+}
+
+.rf-main--full {
+  width: 100%;
 }
 
 /* ============================================================
